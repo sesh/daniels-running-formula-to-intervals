@@ -12,7 +12,7 @@ PACES = {
 }
 
 
-def convert(workout):
+def convert(workout, metric=False):
     # cleanup some funk
     workout = workout.replace("×", "x")
 
@@ -43,8 +43,13 @@ def convert(workout):
                             f"- {mins}m00 {PACES[k][0]}-{PACES[k][1]}% Pace"
                         )
                     else:
-                        mi = int(step)
-                        km = mi * 1.6
+                        dist = int(step)
+
+                        if not metric:
+                            km = dist * 1.6
+                        else:
+                            km = dist
+
                         converted.append(
                             f"- {km:.2f}km {PACES[k][0]}-{PACES[k][1]}% Pace"
                         )
@@ -78,7 +83,7 @@ if __name__ == "__main__":
     if not all([athlete_id, api_key, workout_name, workout_str]):
         sys.exit("All fields are required.")
 
-    intervals_str = convert(workout_str)
+    intervals_str = convert(workout_str, metric="--metric" in sys.argv)
     print(intervals_str)
 
     upload = input("Upload [yN]?")

@@ -5,8 +5,10 @@
 There are no dependencies, so usage is as simple as:
 
 ```
-python3 cli.py
+python3 drf.py
 ```
+
+The optional `--metric` flag allows you to specify the formula using metric distances.
 
 The CLI will prompt you for your Intervals Athlete ID and Intervals API Key, you can add these as environment variables (`INTERVALS_ALTHETE_ID` and `INTERVALS_API_KEY`) to load them from their instead.
 
