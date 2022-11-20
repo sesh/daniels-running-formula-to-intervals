@@ -1,0 +1,8 @@
+.env
+Pipfile.lock
+README.md
+__pycache__
+
+# private files for messing with multiple workouts
+workouts.py
+workouts.txt
