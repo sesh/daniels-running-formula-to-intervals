@@ -1,4 +1,4 @@
-from intervals import upload_to_intervals
+from .intervals import upload_to_intervals
 import os
 import sys
 

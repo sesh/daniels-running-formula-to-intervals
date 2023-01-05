@@ -1,4 +1,4 @@
-from thttp import request
+from .thttp import request
 
 
 def upload_to_intervals(
