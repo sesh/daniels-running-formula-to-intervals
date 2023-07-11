@@ -4,6 +4,8 @@ import sys
 
 
 PACES = {
+    "ST": ("105", "130"),
+    "L": ("59", "74"),
     "E": ("59", "74"),
     "M": ("75", "84"),
     "T": ("83", "88"),
@@ -27,11 +29,18 @@ def convert(workout, metric=False):
             repeats = int(repeats)
             step = step.replace("(", "").replace(")", "")
 
+        if "ST" in step:
+            repeats = int(step.split("ST")[0].strip())
+
         for k in PACES:
             if k in step:
+                strides = "ST" in step
                 recovery = None
+
                 if "w/" in step:
                     step, recovery = step.split("w/", 1)
+                elif strides:
+                    recovery = "1 min rest"
 
                 step = step.replace(k, "")
                 step = step.strip()
@@ -42,10 +51,15 @@ def convert(workout, metric=False):
                         converted.append(
                             f"- {mins}m00 {PACES[k][0]}-{PACES[k][1]}% Pace"
                         )
+                    elif strides:
+                        converted.append(f"- 0m20 {PACES[k][0]}-{PACES[k][1]}% Pace")
                     else:
                         dist = int(step)
 
-                        if not metric:
+                        if dist > 50:
+                            # probably meters
+                            km = dist / 1000
+                        elif not metric:
                             km = dist * 1.6
                         else:
                             km = dist
@@ -65,8 +79,21 @@ def convert(workout, metric=False):
                                 "recovery between",
                             ]:
                                 converted.append(f"- {minutes}m00 Rest")
+
                             if recovery_type.strip() in ["jg recoveries", "jg"]:
                                 converted.append(f"- {minutes}m00 50-70% Pace")
+                        else:
+                            dist, recovery_type = recovery.strip().split(" ", 1)
+
+                            dist = int(dist)
+
+                            if dist > 30:
+                                # probably meters
+                                dist = dist / 1000
+                            elif not metric:
+                                dist = dist * 1.6
+
+                            converted.append(f"- {dist:.2f}km 50-70% Pace")
 
     return "\n".join(converted)
 
